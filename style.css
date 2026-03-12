@@ -1,0 +1,120 @@
+@font-face {
+    font-family: 'Shippori Mincho';
+    src: url('shippori-mincho.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    /* ポリメタルグレーメタリック（青みをより強調したブルーグレー） */
+    --color-polymetal: #3e5362;
+    
+    /* テキストは真っ白ではなく、少しくすませて馴染ませる */
+    --color-text-dim: rgba(255, 255, 255, 0.75);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-polymetal);
+    color: var(--color-text-dim);
+    font-family: 'Shippori Mincho', serif;
+    /* 1画面に収めるのではなく、スクロールできる空間を作る */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- Header / タイトル周り --- */
+.header {
+    text-align: center;
+    margin-top: 20vh;
+    margin-bottom: 15vh;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: normal;
+    letter-spacing: 0.25em; /* 文字と文字の間に少しだけ余白（Air）を持たせる */
+    margin: 0;
+    padding: 0;
+    
+    /* 透明度を下げて、背景のグレーに溶け込ませる */
+    opacity: 0.85;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+    margin-top: 1rem;
+    /* フリッドマン的魔法：下線への接続 */
+}
+
+.title::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 60px;
+    background-color: var(--color-text-dim);
+    margin: 40px auto 0;
+    opacity: 0.2;
+}
+
+/* --- Stream / つぶやきの奔流 --- */
+.stream {
+    width: 100%;
+    max-width: 800px;
+    padding: 0 20px 20vh;
+    box-sizing: border-box;
+}
+
+/* --- Zettel / 個別のメモ枠 --- */
+.zettel {
+    margin-bottom: 12vh;
+    /* CSS変数で「実際のよろめき値（PC用）」を定義 */
+    --actual-drift-x: calc(var(--drift-x) * 15px);
+    --actual-drift-y: calc(var(--drift-y) * 10px);
+    
+    transform: translate(var(--actual-drift-x), var(--actual-drift-y));
+    opacity: 0;
+    animation: fade-in-up 1.5s ease-out forwards;
+    /* 遅延タイミングは現状手動のため、「意図された不揃いのカオス」とする */
+    animation-delay: calc(var(--drift-x) * 0.1s + 0.5s);
+}
+
+@keyframes fade-in-up {
+    0% {
+        opacity: 0;
+        transform: translate(var(--actual-drift-x), calc(var(--actual-drift-y) + 20px));
+    }
+    100% {
+        opacity: 1;
+        transform: translate(var(--actual-drift-x), var(--actual-drift-y));
+    }
+}
+
+.meta {
+    font-size: 0.8rem;
+    opacity: 0.4;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.15em;
+    font-family: sans-serif; /* 日付だけは無機質に。感情を排する */
+}
+
+.content {
+    font-size: 1.05rem;
+    line-height: 2.4; /* 息継ぎの余白をさらに多めに取る */
+    letter-spacing: 0.08em;
+}
+
+/* スマホ表示等の調整 */
+@media screen and (max-width: 600px) {
+    .zettel {
+        /* 変数の値を小さく上書きするだけで、キーフレームの再定義が不要になる */
+        --actual-drift-x: calc(var(--drift-x) * 5px);
+        --actual-drift-y: calc(var(--drift-y) * 5px);
+    }
+}
